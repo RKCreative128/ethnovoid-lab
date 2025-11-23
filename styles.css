@@ -720,77 +720,86 @@ body {
 /* Sound Samples Section */
 .sound-samples-section {
     position: relative;
-    left: 0px;
+    left: 175px;
     top: 0;
-    width: 1234px;
-    margin: 20px auto 30px;
-    padding: 20px;
-    background-color: #F5D3A4;
+    width: 1100px;
+    height: 100px;
+    margin: 8px 0 15px;
+    padding: 10px 0 10px 0;
+    background-color: #f5d3a400;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(143, 80, 8, 0.1);
 }
 
 .sound-samples-title {
     font-family: 'Helvetica', Arial, sans-serif;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     color: #2A2B56;
-    margin: 0 0 15px 0;
+    margin: 0 0 8px 0;
     text-align: center;
+}
+
+.sample-keyboard-hint {
+    font-size: 12px;
+    text-align: center;
+    color: #714803;
+    margin-bottom: 6px;
 }
 
 .sound-samples-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: flex-start;
     align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #FF990A #F5D3A4; /* Firefox */
+}
+
+.sound-samples-container::-webkit-scrollbar {
+    height: 7px;
+}
+.sound-samples-container::-webkit-scrollbar-thumb {
+    background: #FF990A;
+    border-radius: 5px;
 }
 
 .sound-sample-btn {
-    padding: 10px 20px;
-    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    min-width: 80px;
+    max-width: 120px;
+    padding: 5px 10px;
+    background: linear-gradient(180deg, #FFD24A 50%, #FF990A 100%);
     border: 1.5px solid #FF990A;
-    border-radius: 12px;
+    border-radius: 8px;
     color: #2A2B56;
     font-family: 'Helvetica', Arial, sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s;
     white-space: nowrap;
     user-select: none;
+    text-align: center;
 }
 
-.sound-sample-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 153, 10, 0.4);
-    background: linear-gradient(180deg, rgba(255, 153, 10, 1) 50%, rgba(243, 166, 21, 1) 100%);
-}
-
-.sound-sample-btn:active,
-.sound-sample-btn.playing {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(255, 153, 10, 0.3);
-    background: linear-gradient(180deg, rgba(255, 153, 10, 1) 50%, rgba(231, 135, 0, 1) 100%);
+.sound-sample-btn:active, .sound-sample-btn.playing {
+    background: linear-gradient(180deg, #FF990A 50%, #FFD24A 100%);
+    box-shadow: 0 2px 8px rgba(255,153,10,0.13);
     border-color: #E78700;
 }
 
-@media (max-width: 768px) {
-    .sound-samples-section {
-        left: 0;
-        width: 100%;
-        margin: 20px 0 30px;
-        padding: 15px;
-    }
-    
-    .sound-samples-container {
-        gap: 8px;
-    }
-    
+@media (max-width: 800px) {
     .sound-sample-btn {
-        padding: 8px 16px;
-        font-size: 12px;
+        min-width: 62px;
+        max-width: 94px;
+        padding: 4px 5px;
+        font-size: 11px;
+    }
+    .sound-samples-section {
+        padding: 5px 0 10px 0;
     }
 }
 
