@@ -1,0 +1,602 @@
+﻿/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica', 'Helvetica Light', Arial, sans-serif;
+    background-color: #FFFAEF;
+    width: 1440px;
+    min-height: 834px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Header Navigation */
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 115.44px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.header-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 250, 239, 1) 59%, rgba(255, 250, 239, 0) 100%);
+}
+
+.header-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25.18px 0;
+    height: 100%;
+    width: 100%;
+}
+
+.logo {
+    position: absolute;
+    left: 103px;
+    top: 27.18px;
+    display: flex;
+    align-items: center;
+    width: 190.5px;
+    height: 29px;
+}
+
+.logo-text {
+    font-family: 'Helvetica Light', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.22900390625em;
+    text-align: center;
+    color: #2A2B56;
+}
+
+.nav-buttons {
+    position: absolute;
+    right: 103px;
+    top: 25.18px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.14990234375em;
+    text-align: center;
+    color: #2A2B56;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-button.active {
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 1px solid #FF990A;
+    color: #FFFAEF;
+    font-weight: 700;
+}
+
+/* Main Container */
+.main-container {
+    position: relative;
+    width: 1440px;
+    min-height: 834px;
+    background-color: #FFFAEF;
+    padding-top: 115.44px;
+}
+
+/* Sequencer Trap Frame */
+.sequencer-trap {
+    position: relative;
+    left: 103px;
+    top: 5.56px;
+    width: 1234px;
+    height: 547px;
+    background-color: #F5D3A4;
+    border-radius: 32px;
+    margin-bottom: 36.75px;
+    padding: 20px 49px;
+    box-shadow: -6px 5px 14.699999809265137px 0px rgba(143, 80, 8, 0.15);
+}
+
+.frame-39 {
+    width: 1062px;
+    height: 426.57px;
+    position: relative;
+    margin: 13.71px auto 0;
+}
+
+/* Adjust sequencer trap height to accommodate BPM controls below */
+.sequencer-trap {
+    position: relative;
+    left: 103px;
+    top: 5.56px;
+    width: 1234px;
+    height: 590px; /* Increased height to accommodate BPM controls below */
+    background-color: #F5D3A4;
+    border-radius: 32px;
+    margin-bottom: 36.75px;
+    padding: 20px 49px;
+    box-shadow: -6px 5px 14.699999809265137px 0px rgba(143, 80, 8, 0.15);
+}
+
+/* Title */
+.sequencer-title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1062px;
+    height: 37px;
+    font-family: 'Helvetica Light', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.22900390625em;
+    text-align: left;
+    color: #2A2B56;
+    margin: 0;
+}
+
+/* Group 6 - Sequencer Content */
+.group-6 {
+    position: absolute;
+    left: -35px;
+    top: 58px;
+    width: 1114.85px;
+    height: 358px;
+}
+
+.frame-32 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: fit-content;
+}
+
+/* Sound Labels Column */
+.frame-31 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: fit-content;
+    height: fit-content;
+    min-width: 95.11px;
+    flex-shrink: 0;
+}
+
+.sound-label {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 15.482902526855469px;
+    line-height: 1.1499023098244534em;
+    text-align: right;
+    color: #2A2B56;
+    width: 100%;
+    height: fit-content;
+    white-space: nowrap;
+    padding-right: 0;
+}
+
+/* Sequencer Grid */
+.frame-40 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+    width: fit-content;
+    height: fit-content;
+    flex-shrink: 0;
+}
+
+/* ensure the visual grid can be clipped when columns are reduced */
+.frame-40 {
+    position: relative;
+    overflow: hidden;
+}
+
+.sequencer-grid {
+    width: 958px;
+    height: 358px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.sound-label {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 15.482902526855469px;
+    line-height: 1.1499023098244534em;
+    text-align: right;
+    color: #2A2B56;
+    width: 100%;
+    height: fit-content;
+    white-space: nowrap;
+    padding-right: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.sound-label:hover {
+    opacity: 0.8;
+}
+
+/* Interactive Grid Overlay - positioned exactly over SVG rectangles */
+.interactive-grid-overlay {
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    width: 958px;
+    height: 358px;
+    pointer-events: none;
+}
+
+.step-button {
+    position: absolute;
+    width: 44px;
+    height: 26px;
+    border-radius: 11px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.step-button:hover {
+    opacity: 0.3;
+}
+
+.step-button.active {
+    opacity: 0.7;
+    background-color: rgba(255, 153, 10, 0.5);
+    box-shadow: 0 0 8px rgba(255, 153, 10, 0.6);
+}
+
+.step-button.mute-active {
+    opacity: 0.7;
+    background-color: rgba(42, 43, 86, 0.5);
+    box-shadow: 0 0 8px rgba(42, 43, 86, 0.6);
+}
+
+/* Add Column Button */
+.frame-33 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 158px 5px;
+    width: 18px;
+    height: 358px;
+    border: 1px solid #FF990A;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.add-text {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 15.482902526855469px;
+    line-height: 1.1499023098244534em;
+    text-align: center;
+    color: #FF990A;
+}
+
+/* Red Vertical Line - positioned absolute to frame-39 */
+.rectangle-22 {
+    position: absolute;
+    left: 114.95px;
+    top: 58px;
+    width: 1.5px;
+    height: 358px;
+    background-color: #FF0004;
+    border-radius: 12px;
+    box-shadow: 0px 4px 4px 0px rgba(255, 153, 10, 0.25);
+    z-index: 2;
+}
+
+/* BPM Controls Section - positioned below sequencer table */
+.bpm-controls-section {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.frame-38-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.frame-38-controls.playing {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+}
+
+.controls-svg {
+    width: 202px;
+    height: 43px;
+    display: block;
+    transition: all 0.2s;
+}
+
+.group-1, .volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+}
+
+.bpm-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+}
+
+.bpm-display, .volume-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+    padding: 7.5px;
+    width: 135px;
+    height: fit-content;
+    background-color: #F5D3A4;
+    border: 1.5px solid #FF990A;
+    border-radius: 12px;
+}
+
+.bpm-text, .volume-text {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.14990234375em;
+    text-align: center;
+    color: #E78700;
+}
+
+.bpm-plus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+    padding: 7.5px 15.75px;
+    width: fit-content;
+    height: fit-content;
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 1.5px solid #FF990A;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.bpm-minus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+    padding: 7.5px 15.75px;
+    width: fit-content;
+    height: fit-content;
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 1.5px solid #FF990A;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.bpm-symbol, .volume-symbol {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.14990234375em;
+    text-align: center;
+    color: #2A2B56;
+}
+
+/* Volume Controls */
+.volume-minus, .volume-plus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7.5px;
+    padding: 7.5px 15.75px;
+    width: fit-content;
+    height: fit-content;
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 1.5px solid #FF990A;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+
+/* Lorem Ipsum Text */
+.lorem-text {
+    position: relative;
+    left: 103px;
+    top: 0;
+    width: 1233.53px;
+    min-height: 100px;
+    font-family: 'Helvetica Light', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.22900390625em;
+    text-align: center;
+    color: #000000;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Volume and Tempo Sliders Container */
+.sliders-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Volume Slider */
+.volume-slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* Tempo Slider */
+.tempo-slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* Slider Labels */
+.slider-label {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #2A2B56;
+    margin-bottom: 4px;
+}
+
+.tempo-slider, .volume-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #F5D3A4;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid #FF990A;
+    cursor: pointer;
+}
+
+/* Chrome, Safari, Edge - Tempo Slider */
+.tempo-slider::-webkit-slider-track,
+.volume-slider::-webkit-slider-track {
+    width: 100%;
+    height: 8px;
+    background: #F5D3A4;
+    border-radius: 4px;
+    border: 1px solid #FF990A;
+}
+
+.tempo-slider::-webkit-slider-thumb,
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 2px solid #FF990A;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Firefox - Tempo and Volume Sliders */
+.tempo-slider::-moz-range-track,
+.volume-slider::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: #F5D3A4;
+    border-radius: 4px;
+    border: 1px solid #FF990A;
+}
+
+.tempo-slider::-moz-range-thumb,
+.volume-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(243, 166, 21, 1) 50%, rgba(231, 135, 0, 1) 100%);
+    border: 2px solid #FF990A;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tempo-slider-labels, .volume-slider-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 12px;
+    color: #2A2B56;
+    font-weight: 400;
+}
+
+.tempo-min, .tempo-max, .volume-min, .volume-max {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 12px;
+    color: #2A2B56;
+    font-weight: 400;
+}
+
+/* Audio visualizer (placed to right of tempo sliders) */
+.visualizer-container { display: none; }
+
+/* Integrate visualizer into the volume display */
+.volume-display {
+    position: relative;
+    overflow: hidden;
+}
+
+.volume-display .volume-text {
+    position: relative;
+    z-index: 2;
+}
+
+#audio-visualizer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.93;
+    border-radius: 10px;
+    pointer-events: none;
+}

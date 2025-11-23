@@ -1,0 +1,1086 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSANTARA Sequencer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-gradient"></div>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-text">ETHNOVOID </span>
+                <span class="logo-text">Lab</span>
+            </div>
+            <nav class="nav-buttons">
+                <button class="nav-button active">Virtual Machine</button>
+                <button class="nav-button">Tentang Sampelong</button>
+            </nav>
+        </div>
+    </header>
+    <main class="main-container">
+        <div class="sequencer-trap">
+            <div class="frame-39">
+                <h1 class="sequencer-title">NUSANTARA Sequencer</h1>
+                <div class="rectangle-22"></div>
+                <div class="group-6">
+                    <div class="frame-32">
+                        <div class="frame-31">
+                            <div class="sound-label">Garinyia' Pako' 1</div>
+                            <div class="sound-label">Garinyia' Pako' 2</div>
+                            <div class="sound-label">Garinyia' Pako' 3</div>
+                            <div class="sound-label">Ilau</div>
+                            <div class="sound-label">Longkiang 2</div>
+                            <div class="sound-label">Longkiang 1</div>
+                            <div class="sound-label">Lapeh</div>
+                            <div class="sound-label">Pako' 1</div>
+                            <div class="sound-label">Pako' 2</div>
+                            <div class="sound-label">Pako' 3</div>
+                            <div class="sound-label">Pako' 4</div>
+                            <div class="sound-label">Tanpa Suara</div>
+                        </div>
+                        <div class="frame-40">
+                            <img src="images/sequencer-visual.svg" alt="Sequencer Grid" class="sequencer-grid">
+                            <!-- Interactive grid overlay - positioned exactly over SVG cells -->
+                            <div class="interactive-grid-overlay" id="sequencer-overlay"></div>
+                        </div>
+                        <button class="frame-33 add-column-btn">
+                            <span class="add-text">+</span>
+                        </button>
+                        <button class="frame-33 remove-column-btn" title="Kurangi kolom">
+                            <span class="add-text">−</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Audio Visualizer (moved below grid) -->
+            </div>
+            <!-- Audio Visualizer placed under the sequencer grid -->
+            <div class="visualizer-container" aria-hidden="false">
+                <canvas id="audio-visualizer"></canvas>
+            </div>
+
+            <!-- BPM Controls Section - positioned below the sequencer table -->
+            <div class="bpm-controls-section">
+                <!-- Play/Pause, Volume, and Tempo controls aligned horizontally -->
+                <div class="controls-row">
+                    <div class="frame-38-controls">
+                        <img src="images/sequencer-controls.svg" alt="Play/Stop Controls" class="controls-svg">
+                    </div>
+                    <button id="reset-steps" class="bpm-plus" title="Reset selected steps">Reset</button>
+                    <button id="randomize-steps" class="bpm-plus" title="Acak kolom">Acak</button>
+                    <div class="volume-controls">
+                        <button class="volume-minus">
+                            <span class="volume-symbol">-</span>
+                        </button>
+                        <div class="volume-display">
+                                <span class="volume-text">75 dB</span>
+                                <canvas id="audio-visualizer"></canvas>
+                            </div>
+                        <button class="volume-plus">
+                            <span class="volume-symbol">+</span>
+                        </button>
+                    </div>
+                    <div class="group-1 bpm-controls">
+                        <button class="frame-24 bpm-minus">
+                            <span class="bpm-symbol">-</span>
+                        </button>
+                        <div class="frame-22 bpm-display">
+                            <span class="bpm-text">60 bpm</span>
+                        </div>
+                        <button class="frame-23 bpm-plus">
+                            <span class="bpm-symbol">+</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Volume and Tempo Sliders -->
+                <div class="sliders-container">
+                    <!-- Volume Slider -->
+                    <div class="volume-slider-container">
+                        <div class="slider-label">Volume</div>
+                        <input type="range" min="0" max="100" value="75" class="volume-slider" id="volume-slider">
+                        <div class="volume-slider-labels">
+                        </div>
+                    </div>
+                    <!-- Tempo Slider -->
+                    <div class="tempo-slider-container">
+                        <div class="slider-label">Tempo</div>
+                        <input type="range" min="10" max="200" value="60" class="tempo-slider" id="tempo-slider">
+                        <div class="tempo-slider-labels">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="lorem-text">
+            Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </main>
+
+    <script>
+        // Play/Stop controls functionality - using single SVG with click detection
+        const controlsContainer = document.querySelector('.frame-38-controls');
+        const redLine = document.querySelector('.rectangle-22');
+        const soundLabels = document.querySelectorAll('.sound-label');
+
+        let isPlaying = false;
+        let animationId = null;
+        let startTime = null;
+
+        // Animation function for red line
+        function animateLine(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            // Calculate position based on BPM
+            // For sequencer, we want the line to move across the grid in time with the tempo
+            // Let's assume 4 beats per measure, so full cycle takes (60/BPM) * 4 seconds
+                const measureDuration = (60 / currentBPM) * 4 * 1000; // 4 beats per measure
+            const progress = (elapsed % measureDuration) / measureDuration;
+
+            // Move line from start to end position
+                const sequencerWidth = sequencerVisualWidth; // width of sequencer grid
+            const lineStart = 114.2; // starting position of red line
+
+            const currentPosition = lineStart + (progress * sequencerWidth);
+            redLine.style.left = currentPosition + 'px';
+
+            animationId = requestAnimationFrame(animateLine);
+        }
+
+        // Play functionality
+        async function playSequencer() {
+            if (!isPlaying) {
+                // Resume AudioContext if suspended (required by many browsers)
+                if (audioContext && audioContext.state === 'suspended') {
+                    try {
+                        await audioContext.resume();
+                        console.log('AudioContext resumed');
+                    } catch (e) {
+                        console.warn('Failed to resume AudioContext:', e);
+                    }
+                }
+
+                // If buffers not loaded yet, try loading (useful if user triggered play early)
+                if (audioContext && Object.keys(audioBuffers).length === 0) {
+                    console.log('Audio buffers empty — attempting to (re)load audio files');
+                    try {
+                        await loadAudioFiles();
+                    } catch (e) {
+                        console.warn('Error while loading audio files on play:', e);
+                    }
+                    console.log('Audio buffers now:', Object.keys(audioBuffers).length);
+                }
+
+                isPlaying = true;
+                startTime = null;
+                lastPlayedCol = -1;
+                animateLine(performance.now());
+
+                // Add visual feedback to the controls
+                controlsContainer.classList.add('playing');
+            }
+        }
+
+        // Stop functionality
+        function stopSequencer() {
+            if (isPlaying) {
+                isPlaying = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+
+                // Reset red line to starting position
+                redLine.style.left = '114.2px';
+                lastPlayedCol = -1;
+
+                // Remove visual feedback
+                controlsContainer.classList.remove('playing');
+            }
+        }
+
+        // Handle click on controls with position detection
+        controlsContainer.addEventListener('click', async function(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const containerWidth = rect.width;
+
+            // If click is on the left half (play button), start playing
+            // If click is on the right half (stop button), stop playing
+            if (clickX < containerWidth / 2) {
+                await playSequencer();
+            } else {
+                stopSequencer();
+            }
+        });
+
+        // Tempo controls functionality
+        const bpmDisplay = document.querySelector('.bpm-text');
+        const tempoSlider = document.getElementById('tempo-slider');
+        const bpmMinusBtn = document.querySelector('.bpm-minus');
+        const bpmPlusBtn = document.querySelector('.bpm-plus');
+
+        let currentBPM = 60;
+
+        // Update BPM display
+        function updateBPMDisplay(bpm) {
+            const oldBPM = currentBPM;
+            bpmDisplay.textContent = bpm + ' bpm';
+            tempoSlider.value = bpm;
+            currentBPM = bpm;
+
+            // If playing and BPM changed, adjust animation timing for smooth speed change
+            if (isPlaying && oldBPM !== bpm && startTime) {
+                // Calculate current progress and adjust startTime to maintain position but change speed
+                const currentTime = performance.now();
+                const elapsed = currentTime - startTime;
+                const oldMeasureDuration = (60 / oldBPM) * 4 * 1000;
+                const currentProgress = (elapsed % oldMeasureDuration) / oldMeasureDuration;
+
+                // Adjust startTime to maintain current position with new speed
+                const newMeasureDuration = (60 / currentBPM) * 4 * 1000;
+                startTime = currentTime - (currentProgress * newMeasureDuration);
+                // Reset per-track play state so newly scheduled notes follow the new tempo
+                lastPlayedCol = -1;
+                trackPlayState = trackPlayState.map(() => ({ offset: 0, lastCol: -1 }));
+            }
+        }
+
+        // Tempo slider change event
+        tempoSlider.addEventListener('input', function() {
+            const newBPM = parseInt(this.value);
+            updateBPMDisplay(newBPM);
+        });
+
+        // BPM Plus button click
+        bpmPlusBtn.addEventListener('click', function() {
+            if (currentBPM < 200) {
+                const newBPM = currentBPM + 1;
+                updateBPMDisplay(newBPM);
+            }
+        });
+
+        // BPM Minus button click
+        bpmMinusBtn.addEventListener('click', function() {
+            if (currentBPM > 60) {
+                const newBPM = currentBPM - 1;
+                updateBPMDisplay(newBPM);
+            }
+        });
+
+        // Volume controls functionality
+        const volumeDisplay = document.querySelector('.volume-text');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeMinusBtn = document.querySelector('.volume-minus');
+        const volumePlusBtn = document.querySelector('.volume-plus');
+        const resetStepsBtn = document.getElementById('reset-steps');
+
+        let currentVolume = 75;
+
+        // Update volume display
+        function updateVolumeDisplay(volume) {
+            volumeDisplay.textContent = volume + ' dB';
+            volumeSlider.value = volume;
+            currentVolume = volume;
+            // Apply to master gain (linear mapping 0-100 -> 0.0-1.0)
+            if (audioContext) {
+                if (!masterGain) {
+                    masterGain = audioContext.createGain();
+                    masterGain.connect(audioContext.destination);
+                }
+                masterGain.gain.value = currentVolume / 100;
+            }
+        }
+
+        // Volume slider change event
+        volumeSlider.addEventListener('input', function() {
+            const newVolume = parseInt(this.value);
+            updateVolumeDisplay(newVolume);
+        });
+
+        // Volume Plus button click
+        volumePlusBtn.addEventListener('click', function() {
+            if (currentVolume < 100) {
+                const newVolume = currentVolume + 1;
+                updateVolumeDisplay(newVolume);
+            }
+        });
+
+        // Volume Minus button click
+        volumeMinusBtn.addEventListener('click', function() {
+            if (currentVolume > 0) {
+                const newVolume = currentVolume - 1;
+                updateVolumeDisplay(newVolume);
+            }
+        });
+
+        // Reset button - clear all selected steps and mute flags
+        if (resetStepsBtn) {
+            resetStepsBtn.addEventListener('click', function() {
+                // Clear sequencerSteps (leave size intact)
+                for (let r = 0; r < sequencerSteps.length; r++) {
+                    for (let c = 0; c < sequencerSteps[r].length; c++) {
+                        sequencerSteps[r][c] = false;
+                    }
+                }
+
+                // Remove visual classes from step buttons
+                stepButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('mute-active');
+                    btn.style.backgroundColor = '';
+                });
+
+                // Reset last played column so playback state is clean
+                lastPlayedCol = -1;
+                // Reset per-track playhead state
+                trackPlayState = trackPlayState.map(() => ({ offset: 0, lastCol: -1 }));
+
+                console.log('All steps have been reset');
+            });
+        }
+
+        // Randomize button - smart Minang-aware randomizer
+        const randomizeBtn = document.getElementById('randomize-steps');
+
+        /*
+          randomizeMinang()
+          - Menghasilkan pola not yang terinspirasi dari melodi tradisional Minangkabau.
+          - Prinsip implementasi (sederhana namun musikal):
+            * Gunakan skala pentatonik (sering dipakai pada instrumen tradisional seperti talempong/saluang)
+            * Buat kontur melodi kecil (step -2..+2) untuk menghasilkan frase yang terasa "Minang" (gerak melodi pendek, pola naik/turun)
+            * Gabungkan beberapa motif sederhana (pengulangan, turun-naik, lompatan kecil)
+            * Aktifkan langkah yang membentuk frase melodi di grid (kolom berurutan)
+          Catatan: ini bukan transkripsi lagu tertentu; melainkan generator motif yang terinspirasi oleh karakter musik Minang.
+        */
+        function randomizeMinang() {
+            if (!sequencerSteps || sequencerSteps.length === 0) return;
+            const rows = sequencerSteps.length;
+            const cols = sequencerSteps[0].length;
+
+            // CLEAR grid
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    sequencerSteps[r][c] = false;
+                    const btnIndex = r * cols + c;
+                    const btn = stepButtons[btnIndex];
+                    if (btn) btn.classList.remove('active');
+                }
+            }
+
+            // Build a pentatonic scale mapping across the available rows.
+            // We'll model a simple pentatonic scale (intervals in semitones): [0, 2, 4, 7, 9]
+            // Map these degrees across octaves to fill the row count, lowest row = lowest pitch.
+            const pentatonic = [0, 2, 4, 7, 9];
+            const scaleRows = [];
+            while (scaleRows.length < rows) {
+                for (let d = 0; d < pentatonic.length && scaleRows.length < rows; d++) {
+                    scaleRows.push(pentatonic[d]);
+                }
+                // simulate next octave by adding 12 semitones but we only need degree identity for selection
+            }
+
+            // Helper: check if a row index corresponds to a scale degree (we constructed scaleRows accordingly)
+            function rowInScale(r) {
+                return typeof scaleRows[r] !== 'undefined';
+            }
+
+            // Choose an initial row (prefer mid-high region typical for saluang/talempong melodies)
+            let prevRow = Math.floor(rows * 0.45) + Math.floor(Math.random() * Math.max(1, Math.floor(rows * 0.2)));
+            prevRow = Math.max(0, Math.min(rows - 1, prevRow));
+
+            // Some motif templates (relative movements in semitone-equivalent rows)
+            const motifs = [
+                [0, 1, 2, 1],      // naik-lunak
+                [0, -1, -2, -1],   // turun-lunak
+                [0, 0, 1, 0],      // pengulangan + sedikit naik
+                [0, 2, 0, -1],     // lompatan kecil
+                [0, 1, 0, 1, 2],   // ascend-ish
+                [0, -1, 0, -1, -2] // descend-ish
+            ];
+
+            // We'll walk across columns and lay down motifs sequentially
+            let col = 0;
+            while (col < cols) {
+                // pick a motif and probability of rest (silence) between motifs
+                const motif = motifs[Math.floor(Math.random() * motifs.length)];
+                const motifLength = motif.length;
+
+                // small chance to insert a rest column before motif to vary phrasing
+                if (Math.random() < 0.1 && col < cols - 1) {
+                    col += 1;
+                    continue;
+                }
+
+                for (let m = 0; m < motifLength && col < cols; m++, col++) {
+                    // compute candidate row by moving from prevRow with motif movement
+                    const step = motif[m];
+                    // scale movement to rows (prefer small intervals): multiply step by 1
+                    let candidate = prevRow + step;
+                    // random small variation
+                    candidate += Math.floor((Math.random() - 0.5) * 2);
+
+                    // clamp
+                    candidate = Math.max(0, Math.min(rows - 1, candidate));
+
+                    // ensure candidate is a scale row (if not, nudge up/down until it is)
+                    let attempts = 0;
+                    while (!rowInScale(candidate) && attempts < rows) {
+                        candidate = Math.max(0, Math.min(rows - 1, candidate + (Math.random() > 0.5 ? 1 : -1)));
+                        attempts++;
+                    }
+
+                    // Activate the chosen row in this column
+                    sequencerSteps[candidate][col] = true;
+                    const btnIndex = candidate * cols + col;
+                    const btn = stepButtons[btnIndex];
+                    if (btn) btn.classList.add('active');
+
+                    // Optionally add a companion note (harmonic/percussion) with a small probability
+                    if (Math.random() < 0.15) {
+                        // pick a lower row to act like a drone/percussion hit
+                        const lower = Math.max(0, candidate - (1 + Math.floor(Math.random() * 2)));
+                        sequencerSteps[lower][col] = true;
+                        const lowerBtn = stepButtons[lower * cols + col];
+                        if (lowerBtn) lowerBtn.classList.add('active');
+                    }
+
+                    prevRow = candidate;
+                }
+            }
+
+            console.log('Randomize Minang: generated melodic motifs across grid');
+        }
+
+        if (randomizeBtn) {
+            randomizeBtn.addEventListener('click', function() {
+                randomizeMinang();
+            });
+        }
+
+        // ===== AUDIO SEQUENCER FUNCTIONALITY =====
+
+        // Web Audio API setup
+        let audioContext;
+        let audioBuffers = {};
+        let sequencerSteps = []; // 2D array to store step states
+        let stepButtons = [];
+        let masterGain = null;
+        let analyser = null;
+        let compressor = null;
+        let lastPlayedCol = -1;
+        // Visual/grid sizing constants (allow dynamic number of columns)
+        const ORIGINAL_COLS = 20;
+        const ORIGINAL_GRID_PX = 958; // original drawn grid image width
+        let sequencerVisualWidth = ORIGINAL_GRID_PX; // current visible width (px)
+        // Per-row playhead state so consecutive (adjacent) steps continue from previous offset
+        let trackPlayState = []; // array of { offset: seconds, lastCol: number }
+        // Volume boost: use dB with a safe cap. Convert to linear gain properly (10^(dB/20)).
+        const MAX_BOOST_DB = 50; // do not allow absurdly large boosts (safety)
+        // Start with no boost by default; keep user-facing currentVolume for master gain.
+        let volumeBoostDb = 0; // default boost in dB
+        // correct conversion from dB to linear amplitude
+        let volumeBoost = Math.pow(10, Math.min(volumeBoostDb, MAX_BOOST_DB) / 20);
+        function setVolumeBoostDb(db) {
+            if (db > MAX_BOOST_DB) {
+                console.warn(`Requested boost ${db}dB exceeds safe max ${MAX_BOOST_DB}dB — capping to ${MAX_BOOST_DB}dB`);
+            }
+            volumeBoostDb = Math.min(db, MAX_BOOST_DB);
+            volumeBoost = Math.pow(10, volumeBoostDb / 20);
+            console.log(`volumeBoost set: ${volumeBoostDb} dB -> linear ${volumeBoost.toFixed(3)}`);
+        }
+
+        // Explicit mapping from visible labels to files present in `Sounds/`
+        const audioFileMap = {
+            "Garinyia' Pako' 1": 'Sounds/Garinyia_1.wav',
+            "Garinyia' Pako' 2": 'Sounds/Garinyia_2.wav',
+            "Garinyia' Pako' 3": 'Sounds/Garinyia_3.wav',
+            "Ilau": 'Sounds/Ilau.wav',
+            "Longkiang 2": 'Sounds/Longkiang2.wav',
+            "Longkiang 1": 'Sounds/Longkiang1.wav',
+            "Lapeh": 'Sounds/Lapeh.wav',
+            "Pako' 1": 'Sounds/Pako_1.wav',
+            "Pako' 2": 'Sounds/Pako_2.wav',
+            "Pako' 3": 'Sounds/Pako_3.wav',
+            "Pako' 4": 'Sounds/Pako_4.wav'
+        };
+
+        // Initialize Web Audio API and master gain
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = audioContext.createGain();
+                masterGain.gain.value = currentVolume / 100;
+                // Create compressor + analyser and connect chain: masterGain -> compressor -> analyser -> destination
+                compressor = audioContext.createDynamicsCompressor();
+                // gentle settings to reduce harsh transients while preserving dynamics
+                compressor.threshold.setValueAtTime(-14, audioContext.currentTime);
+                compressor.knee.setValueAtTime(24, audioContext.currentTime);
+                compressor.ratio.setValueAtTime(3, audioContext.currentTime);
+                compressor.attack.setValueAtTime(0.01, audioContext.currentTime);
+                compressor.release.setValueAtTime(0.2, audioContext.currentTime);
+
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.85;
+
+                masterGain.connect(compressor);
+                compressor.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                // initialize visualizer canvas and drawing loop
+                initVisualizer();
+
+                loadAudioFiles();
+            } catch (e) {
+                console.error('Web Audio API not supported:', e);
+            }
+        }
+
+        // Load audio files according to `audioFileMap`
+        async function loadAudioFiles() {
+            for (const labelEl of soundLabels) {
+                const soundName = labelEl.textContent.trim();
+                const path = audioFileMap[soundName];
+                if (!path) {
+                    console.warn(`No mapping for label: ${soundName}`);
+                    continue;
+                }
+                try {
+                    const response = await fetch(path);
+                    if (!response.ok) {
+                        console.warn(`Failed to fetch ${path} for ${soundName}: ${response.status}`);
+                        continue;
+                    }
+                    const arrayBuffer = await response.arrayBuffer();
+                    audioBuffers[soundName] = await audioContext.decodeAudioData(arrayBuffer);
+                    console.log(`Loaded: ${soundName} <- ${path}`);
+                } catch (error) {
+                    console.error(`Failed to load ${soundName} (${path}):`, error);
+                }
+            }
+            // Log a summary of loaded buffers for quick debugging
+            console.log('Audio buffers loaded:', Object.keys(audioBuffers));
+        }
+
+        // Ensure an audio buffer is loaded on-demand for a given sound name.
+        // Returns true if buffer is available after the call, false otherwise.
+        async function ensureBufferLoaded(soundName) {
+            if (audioBuffers[soundName]) return true;
+            const path = audioFileMap[soundName];
+            if (!path) {
+                console.warn(`No file mapping for ${soundName}; cannot load on-demand.`);
+                return false;
+            }
+            try {
+                console.log(`On-demand loading: ${soundName} <- ${path}`);
+                const response = await fetch(path);
+                if (!response.ok) {
+                    console.warn(`Failed to fetch ${path} for ${soundName}: ${response.status}`);
+                    return false;
+                }
+                const arrayBuffer = await response.arrayBuffer();
+                audioBuffers[soundName] = await audioContext.decodeAudioData(arrayBuffer);
+                console.log(`(On-demand) Loaded: ${soundName}`);
+                return true;
+            } catch (err) {
+                console.error(`(On-demand) Failed to load ${soundName}:`, err);
+                return false;
+            }
+        }
+
+        // Play audio buffer through masterGain, optionally trimming to `durationSec` seconds
+        // Play audio buffer through masterGain, optionally trimming to `durationSec` seconds
+        // and starting from `startOffset` seconds into the buffer.
+        // playAudio now accepts an optional 'gainMultiplier' to scale a source when multiple voices play together.
+        function playAudio(soundName, durationSec, startOffset = 0, gainMultiplier = 1) {
+            if (!audioBuffers[soundName] || !audioContext) return;
+
+            const now = audioContext.currentTime;
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffers[soundName];
+
+            // create a per-source gain to allow smooth fade-in/out to avoid clicks and clipping
+            const srcGain = audioContext.createGain();
+
+            if (!masterGain) {
+                masterGain = audioContext.createGain();
+                masterGain.gain.value = currentVolume / 100;
+                masterGain.connect(audioContext.destination);
+            }
+
+            source.connect(srcGain);
+            srcGain.connect(masterGain);
+
+            // compute target gain: volumeBoost * gainMultiplier (masterGain controls overall level)
+            // volumeBoost is linear (from dB); gainMultiplier is used to prevent clipping when multiple voices play
+            const targetGain = Math.max(0.0001, volumeBoost * gainMultiplier);
+
+            // apply a short linear fade-in to avoid hard transients (60ms) and smoother release
+            const fadeIn = 0.06; // seconds
+            const fadeOut = 0.06; // seconds
+            srcGain.gain.cancelScheduledValues(now);
+            srcGain.gain.setValueAtTime(0.0001, now);
+            srcGain.gain.linearRampToValueAtTime(targetGain, now + fadeIn);
+
+            if (typeof durationSec === 'number' && durationSec > 0) {
+                // Clamp requested duration to the available buffer length to avoid weird early stops
+                const available = source.buffer ? Math.max(0, source.buffer.duration - startOffset) : durationSec;
+                const playDuration = Math.min(durationSec, available);
+                if (playDuration <= 0) {
+                    console.warn(`playAudio: requested startOffset ${startOffset} >= buffer duration for ${soundName}`);
+                    return;
+                }
+
+                // schedule a gentle fade-out before stopping to avoid abrupt cutoff
+                const fadeOutStart = now + Math.max(fadeIn, playDuration - fadeOut);
+                srcGain.gain.cancelScheduledValues(fadeOutStart);
+                srcGain.gain.linearRampToValueAtTime(0.0001, fadeOutStart + fadeOut);
+
+                source.start(now, startOffset, playDuration);
+                // stop slightly after fade-out to ensure full ramp completes
+                source.stop(now + playDuration + fadeOut + 0.01);
+                console.log(`playAudio: ${soundName} (startOffset=${startOffset.toFixed(3)}s, duration=${playDuration.toFixed(3)}s, gain=${targetGain.toFixed(3)})`);
+            } else {
+                // play full buffer with a gentle fade-out scheduled when stopping manually
+                source.start(now, startOffset);
+                console.log(`playAudio: ${soundName} (startOffset=${startOffset.toFixed(3)}s, full, gain=${targetGain.toFixed(3)})`);
+            }
+        }
+
+        // --- Audio visualizer ---
+        let visualizerCanvas = null;
+        let visualizerCtx = null;
+        let visualizerAnimationId = null;
+
+        function initVisualizer() {
+            visualizerCanvas = document.getElementById('audio-visualizer');
+            if (!visualizerCanvas || !audioContext || !analyser) return;
+            visualizerCtx = visualizerCanvas.getContext('2d');
+            // make canvas crisp on high-DPI displays
+            const dpr = window.devicePixelRatio || 1;
+            const rect = visualizerCanvas.getBoundingClientRect();
+            visualizerCanvas.width = Math.floor(rect.width * dpr);
+            visualizerCanvas.height = Math.floor(rect.height * dpr);
+            // reset any previous transform
+            visualizerCtx.setTransform(1, 0, 0, 1, 0, 0);
+            visualizerCtx.scale(dpr, dpr);
+
+            // start drawing
+            if (visualizerAnimationId) cancelAnimationFrame(visualizerAnimationId);
+            drawVisualizer();
+            // keep canvas sized on resize (register only once)
+            if (!initVisualizer._resizeAdded) {
+                window.addEventListener('resize', initVisualizer);
+                initVisualizer._resizeAdded = true;
+            }
+        }
+
+        function drawVisualizer() {
+            if (!visualizerCtx || !analyser) return;
+            const canvas = visualizerCanvas;
+            const ctx = visualizerCtx;
+            const width = canvas.width / (window.devicePixelRatio || 1);
+            const height = canvas.height / (window.devicePixelRatio || 1);
+
+            // get frequency data
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            // clear
+            ctx.clearRect(0, 0, width, height);
+
+            // draw a small number of vertical bars to match the compact volume bar
+            const barCount = Math.min(8, Math.floor(width / 10));
+            const step = Math.max(1, Math.floor(bufferLength / barCount));
+            const gap = 2;
+            const barWidth = Math.max(2, (width - (barCount - 1) * gap) / barCount);
+
+            for (let i = 0; i < barCount; i++) {
+                const v = dataArray[i * step] / 255; // 0..1
+                const barHeight = v * height;
+
+                // color gradient: gold -> red
+                const grad = ctx.createLinearGradient(0, 0, 0, height);
+                grad.addColorStop(0, '#FFD24A');
+                grad.addColorStop(1, '#B41F27');
+                ctx.fillStyle = grad;
+
+                const x = i * (barWidth + gap);
+                const y = height - barHeight;
+                // draw rounded rect-like bar using fillRect
+                ctx.fillRect(x, y, barWidth, barHeight);
+            }
+
+            visualizerAnimationId = requestAnimationFrame(drawVisualizer);
+        }
+
+        // Initialize sequencer grid
+        function initSequencerGrid() {
+            const overlay = document.getElementById('sequencer-overlay');
+
+            // Row positions (y coordinates from SVG)
+            const rowPositions = [1, 31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331];
+            // Initialize sequencer steps array with ORIGINAL_COLS columns
+            sequencerSteps = Array(12).fill().map(() => Array(ORIGINAL_COLS).fill(false));
+
+            // Initialize per-track playhead state (offset and last column played)
+            trackPlayState = Array(12).fill().map(() => ({ offset: 0, lastCol: -1 }));
+
+            // Build DOM buttons based on sequencerSteps and compute positions
+            updateGridLayout();
+
+            // populate a simple default pattern after grid creation
+            fillDefaultPattern();
+            // Resize / re-init visualizer if present so it stays aligned and crisp
+            if (typeof initVisualizer === 'function') initVisualizer();
+        }
+
+        // Recompute layout (visible width, button positions) and rebuild overlay buttons
+        function updateGridLayout() {
+            const overlay = document.getElementById('sequencer-overlay');
+            const frame40 = document.querySelector('.frame-40');
+            if (!overlay || !frame40 || !sequencerSteps || !sequencerSteps[0]) return;
+
+            const cols = sequencerSteps[0].length;
+
+            // Compute visible width as proportion of original image (clip right side)
+            sequencerVisualWidth = Math.max(40, Math.round(ORIGINAL_GRID_PX * (cols / ORIGINAL_COLS)));
+
+            // Apply widths so underlying image is clipped to the visible area
+            frame40.style.width = sequencerVisualWidth + 'px';
+            overlay.style.width = sequencerVisualWidth + 'px';
+
+            // Reposition existing step buttons (if any) by rebuilding them
+            rebuildGridButtons();
+        }
+
+        // Remove and recreate all step buttons based on current `sequencerSteps` dimensions
+        function rebuildGridButtons() {
+            const overlay = document.getElementById('sequencer-overlay');
+            if (!overlay || !sequencerSteps || !sequencerSteps[0]) return;
+
+            // Clear existing buttons
+            overlay.innerHTML = '';
+            stepButtons = [];
+
+            // Row positions (same as before)
+            const rowPositions = [1, 31, 61, 91, 121, 151, 181, 211, 241, 271, 301, 331];
+
+            const cols = sequencerSteps[0].length;
+            // compute step width based on visible width
+            const stepWidth = sequencerVisualWidth / Math.max(1, cols);
+
+            for (let row = 0; row < rowPositions.length; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const button = document.createElement('div');
+                    button.className = 'step-button';
+                    // Position within overlay (small offset to match visual grid)
+                    const x = Math.round(col * stepWidth + 1);
+                    button.style.left = x + 'px';
+                    button.style.top = rowPositions[row] + 'px';
+                    button.dataset.row = row;
+                    button.dataset.col = col;
+
+                    button.classList.add('step-control');
+                    button.addEventListener('click', function() {
+                        const r = parseInt(this.dataset.row);
+                        const c = parseInt(this.dataset.col);
+                        sequencerSteps[r][c] = !sequencerSteps[r][c];
+                        this.classList.toggle('active');
+                    });
+
+                    // restore visual active state if step was selected in sequencerSteps
+                    try {
+                        if (sequencerSteps[row] && sequencerSteps[row][col]) {
+                            button.classList.add('active');
+                        }
+                    } catch (e) {
+                        // defensive: if sequencerSteps changed, skip restoring
+                    }
+
+                    overlay.appendChild(button);
+                    stepButtons.push(button);
+                }
+            }
+        }
+
+        // Remove the last column from the sequencer grid (safe operation)
+        function removeColumn() {
+            if (!sequencerSteps || sequencerSteps.length === 0) return;
+            const cols = sequencerSteps[0].length;
+            if (cols <= 1) {
+                console.warn('Cannot remove column: at least one column must remain');
+                return;
+            }
+
+            // remove last column data
+            for (let r = 0; r < sequencerSteps.length; r++) {
+                sequencerSteps[r].pop();
+            }
+
+            // clamp play state
+            trackPlayState = trackPlayState.map(s => ({ offset: s.offset || 0, lastCol: Math.min(s.lastCol, Math.max(0, cols - 2)) }));
+            if (lastPlayedCol >= cols - 1) lastPlayedCol = cols - 2;
+
+            // rebuild buttons and layout
+            updateGridLayout();
+            if (typeof initVisualizer === 'function') initVisualizer();
+            console.log('Removed last column. New column count:', sequencerSteps[0].length);
+        }
+
+        // Wire remove-column button
+        const removeColumnBtn = document.querySelector('.remove-column-btn');
+        if (removeColumnBtn) {
+            removeColumnBtn.addEventListener('click', function() {
+                removeColumn();
+            });
+        }
+
+        // Add a new column to the right of the sequencer grid
+        function addColumn() {
+            if (!sequencerSteps || sequencerSteps.length === 0) return;
+            const cols = sequencerSteps[0].length;
+            // append false to each row
+            for (let r = 0; r < sequencerSteps.length; r++) {
+                sequencerSteps[r].push(false);
+            }
+            // adjust play state
+            trackPlayState = trackPlayState.map(s => ({ offset: s.offset || 0, lastCol: s.lastCol }));
+            // rebuild UI
+            updateGridLayout();
+            if (typeof initVisualizer === 'function') initVisualizer();
+            console.log('Added column. New column count:', sequencerSteps[0].length);
+        }
+
+        const addColumnBtn = document.querySelector('.add-column-btn');
+        if (addColumnBtn) {
+            addColumnBtn.addEventListener('click', function() {
+                addColumn();
+            });
+        }
+
+        // Fill a simple default pattern so each column has content and demonstrates timing
+        function fillDefaultPattern() {
+            const rows = sequencerSteps.length;
+            const cols = sequencerSteps[0] ? sequencerSteps[0].length : 20;
+
+            for (let r = 0; r < rows; r++) {
+                const offset = r % 4;
+                for (let c = 0; c < cols; c++) {
+                    if (c === 0) {
+                        sequencerSteps[r][c] = false; // mute column
+                        continue;
+                    }
+                    const active = ((c + offset) % 4) === 0;
+                    sequencerSteps[r][c] = active;
+                    const btnIndex = r * cols + c;
+                    const btn = stepButtons[btnIndex];
+                    if (btn) {
+                        if (active) btn.classList.add('active');
+                        else btn.classList.remove('active');
+                    }
+                }
+            }
+        }
+
+        // Play sequencer step based on red line position
+        function playSequencerStep() {
+            if (!isPlaying) return;
+
+            // Calculate current column based on red line position
+            const redLineLeft = parseFloat(redLine.style.left || '114.2px');
+            const sequencerStart = 114.2;
+            // derive columns from sequencerSteps to support dynamic column count
+            const cols = (sequencerSteps && sequencerSteps[0]) ? sequencerSteps[0].length : 20;
+            const stepWidth = sequencerVisualWidth / Math.max(1, cols);
+
+            const rawIndex = (redLineLeft - sequencerStart) / stepWidth;
+            // Clamp rawIndex into [0, cols) using a tiny epsilon so exact-end floating values map to last column
+            if (isNaN(rawIndex)) return;
+            const clampedIndex = Math.max(0, Math.min(rawIndex, cols - 1e-6));
+            const currentCol = Math.floor(clampedIndex);
+
+            // Only play when the red line is near the CENTER of the column to
+            // ensure sound triggers exactly when the line is 'on' the column.
+            if (currentCol >= 0 && currentCol < cols) {
+                const colStart = sequencerStart + currentCol * stepWidth;
+                const offsetInCol = (redLineLeft - colStart) / stepWidth; // 0..1
+
+                // Define a narrow window around the column center (45%..55%)
+                const centerWindowMin = 0.45;
+                const centerWindowMax = 0.55;
+
+                // Trigger when column changes (more robust than a narrow center window).
+                // Detect loop: if the red line wrapped from the last column back to a smaller index,
+                // clear per-track `lastCol` markers so rows will trigger again on the new pass.
+                if (lastPlayedCol > -1 && currentCol < lastPlayedCol) {
+                    // loop detected
+                    for (let t = 0; t < trackPlayState.length; t++) {
+                        if (trackPlayState[t]) trackPlayState[t].lastCol = -1;
+                    }
+                    // reset global so we will trigger column 0 on wrap
+                    lastPlayedCol = -1;
+                }
+
+                if (currentCol !== lastPlayedCol) {
+                    lastPlayedCol = currentCol;
+
+                    // compute per-column duration in seconds (measureDuration / columns)
+                        const columnDuration = (60 / currentBPM) * 4 / cols; // seconds
+
+                    // Determine how many voices will sound in this column to scale per-source gain
+                    let concurrentVoices = 0;
+                    for (let r = 0; r < soundLabels.length; r++) {
+                        const lbl = soundLabels[r];
+                        const isTrackActive = lbl.dataset.active !== 'false';
+                        const isStepActive = sequencerSteps[r] && sequencerSteps[r][currentCol];
+                        if (isTrackActive && isStepActive) concurrentVoices++;
+                    }
+                    const groupGain = 1 / Math.sqrt(Math.max(1, concurrentVoices)); // scale to avoid clipping
+
+                    soundLabels.forEach((label, rowIndex) => {
+                        const soundName = label.textContent.trim();
+                        const isTrackActive = label.dataset.active !== 'false';
+                        const isStepActive = sequencerSteps[rowIndex] && sequencerSteps[rowIndex][currentCol];
+
+                        if (isTrackActive && isStepActive) {
+                            // Play contiguous selected steps as a single longer slice.
+                            const playRow = (buffer) => {
+                                const state = trackPlayState[rowIndex] || { offset: 0, lastCol: -1 };
+
+                                // If this row already had a play that covered this column, skip (already playing longer slice)
+                                if (state.lastCol >= currentCol) {
+                                    return; // already covered by previous combined play
+                                }
+
+                                // Count how many consecutive active steps starting at currentCol
+                                let contiguousCount = 1;
+                                for (let cc = currentCol + 1; cc < cols; cc++) {
+                                    if (sequencerSteps[rowIndex] && sequencerSteps[rowIndex][cc]) contiguousCount++;
+                                    else break;
+                                }
+
+                                // If previous column (currentCol - 1) was just played for this row, continue offset
+                                let startOffset = 0;
+                                if (state.lastCol === currentCol - 1) {
+                                    startOffset = state.offset || 0;
+                                }
+
+                                // Desired play duration is multiple of columnDuration (and will grow if tempo is lower)
+                                const desiredDuration = columnDuration * contiguousCount;
+
+                                // Clamp to available buffer length from startOffset
+                                const available = buffer && buffer.duration ? Math.max(0, buffer.duration - startOffset) : desiredDuration;
+                                const playDur = Math.min(desiredDuration, available);
+
+                                if (playDur > 0) {
+                                    // Pass groupGain so multiple concurrent voices don't clip
+                                    playAudio(soundName, playDur, startOffset, groupGain);
+
+                                    // update state: advance offset and mark which columns are covered
+                                    state.offset = (startOffset + playDur);
+                                    if (buffer && state.offset >= buffer.duration - 0.0001) {
+                                        // reached end -> reset
+                                        state.offset = 0;
+                                        state.lastCol = -1;
+                                    } else {
+                                        // mark that we've covered columns currentCol .. currentCol+covered-1
+                                        // Determine how many columns the playDur actually covers (clamped to remaining columns)
+                                        let coveredCols = Math.max(1, Math.floor(playDur / columnDuration + 0.0001));
+                                        coveredCols = Math.min(coveredCols, cols - currentCol);
+                                        state.lastCol = Math.min(cols - 1, currentCol + (coveredCols - 1));
+                                    }
+                                    trackPlayState[rowIndex] = state;
+                                } else {
+                                    console.warn(`Cannot play ${soundName} at offset ${startOffset} - no available buffer time`);
+                                }
+                            };
+
+                            if (audioBuffers[soundName]) {
+                                playRow(audioBuffers[soundName]);
+                            } else {
+                                // Try to load on-demand and play once ready
+                                if (audioContext) {
+                                    ensureBufferLoaded(soundName).then(loaded => {
+                                        if (loaded && audioBuffers[soundName]) {
+                                            playRow(audioBuffers[soundName]);
+                                        } else {
+                                            console.warn(`No audio buffer for '${soundName}' (row ${rowIndex}) when triggering column ${currentCol}`);
+                                        }
+                                    });
+                                } else {
+                                    console.warn(`AudioContext not available to load '${soundName}' on-demand`);
+                                }
+                            }
+
+                            // Visual feedback (indexing supports dynamic columns)
+                            const stepButton = stepButtons[rowIndex * cols + currentCol];
+                            if (stepButton) {
+                                stepButton.style.backgroundColor = 'rgba(255, 255, 10, 0.8)';
+                                setTimeout(() => {
+                                    if (!stepButton.classList.contains('active')) {
+                                        stepButton.style.backgroundColor = '';
+                                    }
+                                }, 200);
+                            }
+                        } else {
+                            // If step is not active for this row on this column, and the lastCol was here-1, we do not advance offset.
+                            // However, if there's a gap (non-adjacent later), continuity will naturally reset because lastCol won't match.
+                        }
+                    });
+                }
+            }
+        }
+
+        // Modified animation function to include audio playback
+        function animateLine(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            // Calculate position based on BPM
+            const measureDuration = (60 / currentBPM) * 4 * 1000; // 4 beats per measure
+            const progress = (elapsed % measureDuration) / measureDuration;
+
+            // Move line from start to end position
+            const sequencerWidth = sequencerVisualWidth;
+            const lineStart = 114.2;
+
+            const currentPosition = lineStart + (progress * sequencerWidth);
+            redLine.style.left = currentPosition + 'px';
+
+            // Play sequencer step
+            playSequencerStep();
+
+            animationId = requestAnimationFrame(animateLine);
+        }
+
+        // Sound labels functionality - clickable without visual change
+        soundLabels.forEach((label, index) => {
+            // Add click event listener
+            label.addEventListener('click', function() {
+                const soundName = this.textContent.trim();
+                const isActive = this.dataset.active !== 'false'; // Default true
+
+                // Toggle active state (stored in data attribute)
+                this.dataset.active = isActive ? 'false' : 'true';
+
+                // Log the state change (for debugging/functionality)
+                console.log(`${soundName}: ${this.dataset.active === 'true' ? 'ACTIVE' : 'INACTIVE'}`);
+            });
+
+            // Set initial active state
+            label.dataset.active = 'true';
+        });
+
+        // Initialize everything when page loads
+        window.addEventListener('load', function() {
+            initAudio();
+            initSequencerGrid();
+        });
+    </script>
+</body>
+</html>
