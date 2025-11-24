@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta name="viewport" content="width=1440, user-scalable=no">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NUSANTARA Sequencer</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="fixed-wrapper">
     <header class="header">
         <div class="header-gradient"></div>
         <div class="header-content">
@@ -1749,6 +1751,58 @@
             initNavigation();
             showMobileOrientationPopup();
         });
+
+// ============================
+//  KEYBOARD CONTROL FOR SAMPLE
+// ============================
+
+// Tentukan tombol keyboard untuk setiap sound
+// Contoh mapping (bebas kamu ubah)
+const keySoundMap = {
+    'q': "Garinyia' Pako' 1",
+    'w': "Garinyia' Pako' 2",
+    'e': "Garinyia' Pako' 3",
+    'r': "Ilau",
+    't': "Longkiang 2",
+    'y': "Longkiang 1",
+    'u': "Lapeh",
+    'i': "Pako' 1",
+    'o': "Pako' 2",
+    'p': "Pako' 3",
+    '[': "Pako' 4"
+};
+
+// Ketika keyboard ditekan → play sample
+document.addEventListener('keydown', async function (event) {
+    const key = event.key.toLowerCase();
+
+    if (keySoundMap[key]) {
+        const soundName = keySoundMap[key];
+
+        // Ambil button terkait
+        const btn = document.querySelector(`[data-sound-name="${soundName}"]`);
+
+        if (btn && !btn.classList.contains('playing')) {
+            await startSoundSample(soundName, btn);
+        }
+    }
+});
+
+// Ketika keyboard dilepas → stop sample
+document.addEventListener('keyup', function (event) {
+    const key = event.key.toLowerCase();
+
+    if (keySoundMap[key]) {
+        const soundName = keySoundMap[key];
+        stopSoundSample(soundName);
+
+        // Hapus efek visual "playing"
+        const btn = document.querySelector(`[data-sound-name="${soundName}"]`);
+        if (btn) btn.classList.remove('playing');
+    }
+});
+
     </script>
+    </div>
 </body>
 </html>
