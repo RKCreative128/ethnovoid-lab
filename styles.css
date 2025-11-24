@@ -852,9 +852,10 @@ body {
 }
 
 .sound-sample-btn:active, .sound-sample-btn.playing {
-    background: linear-gradient(180deg, #FFC574 100%, #F5D3A4 100%);
+    background: linear-gradient(180deg, #FF990A 50%, #E78700 100%);
+    color: #672A10;
     box-shadow: 0 2px 8px rgba(255,153,10,0.13);
-    border-color: #FFC574;
+    border-color: #672A10;
 }
 
 @media (max-width: 800px) {
