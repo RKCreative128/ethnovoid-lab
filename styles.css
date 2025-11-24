@@ -21,7 +21,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 1440px;
     height: 115.44px;
     z-index: 1000;
     overflow: hidden;
@@ -1032,3 +1032,4 @@ body {
     margin-top: 12px;
 
 }
+
