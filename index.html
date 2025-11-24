@@ -12,8 +12,12 @@
         <div class="header-gradient"></div>
         <div class="header-content">
             <div class="logo">
-                <span class="logo-text"><strong>ETHNOVOID </strong> </span>
-                <span class="logo-text"> Lab</span>
+                <span class="logo-text"><strong>NUSANTARA </strong> </span>
+                <span class="logo-text"> Sequencer</span>
+            </div>
+            <div class="credit">
+                <span class="logo-text-2"> by <strong>ETHNOVOID</strong>Lab</span>
+                <span class="logo-text-2"> </span>
             </div>
             <nav class="nav-buttons">
                 <button class="nav-button active">Sampelong Sequencer</button>
@@ -31,7 +35,7 @@
     <main class="main-container">
         <div class="sequencer-trap">
             <div class="frame-39">
-                <h1 class="sequencer-title"><strong>NUSANTARA</strong>Sequencer</h1>
+                <h1 class="sequencer-title"><strong>SAMPELONG</strong></h1>
                 <div class="rectangle-22"></div>
                 <div class="group-6">
                     <div class="frame-32">
@@ -76,8 +80,8 @@
                     <div class="frame-38-controls">
                         <img src="images/sequencer-controls.svg" alt="Play/Stop Controls" class="controls-svg">
                     </div>
-                    <button id="reset-steps" class="bpm-plus" title="Reset selected steps">Reset</button>
-                    <button id="randomize-steps" class="bpm-plus" title="Acak kolom">Acak</button>
+                    <button id="reset-steps" class="reset-button" title="Reset selected steps">Reset</button>
+                    <button id="randomize-steps" class="acak-button" title="Acak kolom">Acak</button>
                     <div class="volume-controls">
                         <button class="volume-minus">
                             <span class="volume-symbol">-</span>
@@ -130,11 +134,34 @@
             </div>
         </div>
         
-        <p class="lorem-text">
-            Sampelong adalah alat musik tiup tradisional Minangkabau dari Nagari Talang Maua yang kini hampir punah, meski memiliki sejarah panjang sejak masa pra-sejarah dan berfungsi sebagai pengiring dendang, hiburan masyarakat, hingga musik adat. Dahulu sampelong juga dipakai dalam ritual magic seperti manggasiang tangkurak, namun praktik tersebut telah ditinggalkan dan kini sampelong lebih difungsikan sebagai seni pertunjukan. Tokoh seperti Islamidar berperan besar dalam menolak penggunaan sampelong untuk guna-guna serta mendorong pelestariannya sebagai identitas budaya yang bernilai musikal, historis, dan filosofis. Pewarisan sampelong dilakukan melalui keturunan, pembelajaran otodidak, serta pendidikan formal dan nonformal, sehingga kesenian ini tetap dijaga sebagai kekayaan lokal Minangkabau yang penting untuk dilestarikan.
-        </p>
-    </main>
+    <div id="tentang-sampelong" class="description-section-container">
+        <div class="description-main-title">
+            <span>Alunan Bambu </span>
+            <span>yang penuh dengan</span>
+            <span> cerita.</span>
+        </div>
+        <img class="description-main-image" src="images/Ilustrasi orang.png" />
+        <div class="description-subtitle">Alat musik tiup tradisional Minangkabau dari Nagari Talang Maua yang kini hampir punah, namun memiliki sejarah panjang sebagai pengiring dendang, hiburan, dan musik adat.</div>
+        <div class="description-box-text-left-1">Sampelong adalah alat musik tiup tradisional Minangkabau dari Nagari Talang Maua yang terbuat dari bambu dan memiliki empat lubang nada. Dahulu digunakan sebagai pengiring dendang, hiburan saat bekerja di ladang, hingga tampil dalam acara adat seperti pernikahan dan Batagak Penghulu. Kesenian ini telah berkembang sejak masa Pra-Sejarah dan Pra-Hindu.</div>
+        <img class="description-small-image-left-1" src="https://placehold.co/216x116" />
+        <div class="description-box-text-right-1">Dahulu sampelong juga digunakan dalam praktik magic seperti manggasiang tangkurak, yang bertujuan mempengaruhi seseorang menggunakan ritual musik. Praktik ini bersifat tertutup dan kuat dengan unsur mantra hitam. Kini, fungsi sampelong sepenuhnya bergeser menjadi seni pertunjukan yang menekankan nilai artistik dan musikal.</div>
+        <img class="description-small-image-left-2" src="https://placehold.co/216x116" />
+        <div class="description-box-text-right-2">Irama sampelong menggunakan tangga nada pentatonik dengan ciri khas teknik Garinyiak, terutama pada lagu "Alauan Kabau" yang bercerita tentang sepasang kekasih. Setiap lagu memiliki karakter tersendiri, menjadikan sampelong unik di antara alat musik Minang lainnya. Sebagai alat musik tiup tua, keberadaannya mendahului pengaruh Islam di Minangkabau.</div>
+        <img class="description-small-image-right-1" src="https://placehold.co/216x116" />
+        <div class="description-box-text-right-3">Islamidar, seniman tradisional Minangkabau, menolak penggunaan sampelong untuk guna-guna karena bertentangan dengan ajaran Islam, dan ia mendorong pelestariannya sebagai identitas budaya. Pewarisan sampelong berlangsung melalui jalur keturunan, otodidak, dan pendidikan formal maupun nonformal. Upaya ini memastikan sampelong tetap terjaga sebagai kekayaan lokal yang bernilai historis, kultural, dan filosofis.</div>
+        <img class="description-small-image-right-2" src="https://placehold.co/216x116" />
+    </div>
 
+ <footer class="footer">
+    <div class="footer-img">
+        <img class="footer-img" src="images/Sampelong.png" alt="salempong image" class="sampelong-image-footer">
+    </div>
+</footer>
+ <footer class="footer-text">
+    <div class="footer-text">
+       <span>Copyright © 2025. ETHNOVOID Lab. All Rights Reserved</span>
+    </div>
+</footer>
     <script>
         // Play/Stop controls functionality - using single SVG with click detection
         const controlsContainer = document.querySelector('.frame-38-controls');
@@ -1630,11 +1657,96 @@
             }
         }
 
+        // Navigation functionality
+        function initNavigation() {
+            const sequencerButton = document.querySelector('.nav-button.active');
+            const tentangButton = document.querySelector('.nav-button:not(.active)');
+            const tentangSection = document.getElementById('tentang-sampelong');
+
+            // Sequencer button - scroll to top
+            if (sequencerButton) {
+                sequencerButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Tentang Sampelong button - scroll to description section
+            if (tentangButton) {
+                tentangButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tentangSection = document.getElementById('tentang-sampelong');
+                    if (tentangSection) {
+                        tentangSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+
+            // Intersection Observer for active navigation highlighting
+            if (tentangSection && sequencerButton && tentangButton) {
+                // Track if user has entered the description section
+                let hasEnteredDescription = false;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // When description section becomes visible, activate "Tentang Sampelong" button
+                            hasEnteredDescription = true;
+                            sequencerButton.classList.remove('active');
+                            tentangButton.classList.add('active');
+                        } else {
+                            // Only switch back to "Sampelong Sequencer" if user hasn't entered description yet
+                            // or if they're at the very top of the page
+                            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                            if (!hasEnteredDescription || scrollTop < 100) {
+                                hasEnteredDescription = false;
+                                sequencerButton.classList.add('active');
+                                tentangButton.classList.remove('active');
+                            }
+                            // If hasEnteredDescription is true, keep "Tentang Sampelong" active
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '-10% 0px -10% 0px', // More generous margins
+                    threshold: 0
+                });
+
+                observer.observe(tentangSection);
+
+                // Also listen for scroll to handle edge cases
+                window.addEventListener('scroll', function() {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const tentangRect = tentangSection.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+
+                    // If user is at the very top, always show "Sampelong Sequencer"
+                    if (scrollTop < 100) {
+                        hasEnteredDescription = false;
+                        sequencerButton.classList.add('active');
+                        tentangButton.classList.remove('active');
+                    }
+                    // If user has scrolled past the description section, keep "Tentang Sampelong" active
+                    else if (hasEnteredDescription || tentangRect.top < windowHeight * 0.5) {
+                        sequencerButton.classList.remove('active');
+                        tentangButton.classList.add('active');
+                    }
+                });
+            }
+        }
+
         // Initialize everything when page loads
         window.addEventListener('load', function() {
             initAudio();
             initSequencerGrid();
             initSoundSampleButtons();
+            initNavigation();
             showMobileOrientationPopup();
         });
     </script>
